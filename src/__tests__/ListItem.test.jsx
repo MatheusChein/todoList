@@ -3,12 +3,13 @@ import { render, unmountComponentAtNode } from "react-dom";
 import { act } from "react-dom/test-utils";
 import userEvent from '@testing-library/user-event';
 
-import { TodoItem } from "../components/TodoItem";
+import { ListItem } from "../components/ListItem";
+import { useItemList } from "../hooks/useItemList";
 
 
 /**
- * 1 - Precisa renderizar o nome da tarefa passada como props
- * 2 - Quando eu clicar no checkbox, a tarefa precisa ser marcada como concluída
+ * 1 - Precisa renderizar o nome da tarefa e o status da checkbox, passadas como props
+ * 2 - Quando eu clicar no checkbox, a função handleCheckboxChange deve ser chamada
  */
 
 
@@ -27,20 +28,20 @@ afterEach(() => {
   container = null;
 });
 
-it("should render the incomplete task with the name passed on props", () => {
+it("should render the task with the name and the checkbox status passed on props", () => {
   act(() => {
-    render(<TodoItem name='Task Teste' />, container);
+    render(<ListItem name='Task Teste' isChecked={true} />, container);
   });
 
   expect(container.textContent).toBe("Task Teste");
 
   const input = document.querySelector('input');
-  expect(input.checked).toBe(false);
+  expect(input.checked).toBe(true);
 });
 
-it('should check the task as completed when an user clicks on the input', () => {
+it('should call the function handleCheckboxChange when an user clicks on the checkbox', () => {
   act(() => {
-    render(<TodoItem name='Task Teste'/>, container);
+    render(<ListItem name='Task Teste' isChecked={true}/>, container);
   });
 
   const input = document.querySelector('input');
@@ -49,7 +50,7 @@ it('should check the task as completed when an user clicks on the input', () => 
     input.dispatchEvent(new MouseEvent('click'))
   });
 
-  expect(input.checked).toBe(true)
+  expect().toHaveBeenCalled()
 
   // expect(input.onchange()).toHaveBeenCalledTimes(1)
 })
